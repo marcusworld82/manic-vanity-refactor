@@ -118,4 +118,5 @@
   
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--electric-400));
+  }
 }
