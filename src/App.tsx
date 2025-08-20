@@ -21,7 +21,7 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <div className="dark">
+  <div>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Elements stripe={stripePromise}>
