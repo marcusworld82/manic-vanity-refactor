@@ -20,10 +20,29 @@ const SignInForm: React.FC = () => {
     setLoading(true);
     
     try {
-      await signIn(email, password);
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        // Handle different types of auth errors
+        let errorMessage = 'Sign in failed. Please try again.';
+        
+        if (error.message?.includes('Invalid login credentials')) {
+          errorMessage = 'Invalid email or password. Please check your credentials.';
+        } else if (error.message?.includes('Email not confirmed')) {
+          errorMessage = 'Please check your email and click the confirmation link.';
+        } else if (error.message?.includes('Too many requests')) {
+          errorMessage = 'Too many attempts. Please wait a moment and try again.';
+        }
+        
+        alert(errorMessage); // You can replace this with a toast notification
+        return;
+      }
+      
+      // Successful sign in - redirect will happen automatically via auth state change
       navigate('/');
     } catch (error) {
       console.error('Sign in error:', error);
+      alert('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }

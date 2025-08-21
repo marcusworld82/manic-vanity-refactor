@@ -35,13 +35,40 @@ const SignUpForm: React.FC = () => {
       return;
     }
 
+    if (formData.password.length < 6) {
+      alert('Password must be at least 6 characters long');
+      return;
+    }
+
     setLoading(true);
     
     try {
-      await signUp(formData.email, formData.password);
-      navigate('/');
+      const { error } = await signUp(formData.email, formData.password);
+      
+      if (error) {
+        // Handle different types of signup errors
+        let errorMessage = 'Sign up failed. Please try again.';
+        
+        if (error.message?.includes('User already registered')) {
+          errorMessage = 'This email is already registered. Try signing in instead.';
+        } else if (error.message?.includes('Invalid email')) {
+          errorMessage = 'Please enter a valid email address.';
+        } else if (error.message?.includes('Password should be')) {
+          errorMessage = 'Password must be at least 6 characters long.';
+        } else if (error.message?.includes('Signup is disabled')) {
+          errorMessage = 'New user registration is currently disabled.';
+        }
+        
+        alert(errorMessage); // You can replace this with a toast notification
+        return;
+      }
+      
+      // Show success message for email confirmation
+      alert('Please check your email for a confirmation link to complete your registration.');
+      
     } catch (error) {
       console.error('Sign up error:', error);
+      alert('An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
