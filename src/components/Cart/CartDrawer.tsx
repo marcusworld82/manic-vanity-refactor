@@ -56,59 +56,72 @@ const CartDrawer: React.FC = () => {
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  {items.map((item) => (
-                    <motion.div
-                      key={item.id}
-                      layout
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      className="flex space-x-4 bg-dark-bg rounded-lg p-4 border border-dark-border"
-                    >
+            <div className="space-y-6">
+              {items.map((item) => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="flex space-x-4 bg-dark-bg rounded-lg p-4 border border-dark-border"
+                >
+                  <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-muted">
+                    {item.product.images?.[0] ? (
                       <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded-lg"
+                        src={item.product.images[0].url}
+                        alt={item.product.images[0].alt || item.product.name}
+                        className="w-full h-full object-cover"
                       />
-                      <div className="flex-1">
-                        <h3 className="font-medium text-dark-text mb-1">{item.name}</h3>
-                        <p className="text-electric-400 font-semibold mb-2">${item.price}</p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="h-8 w-8 border-dark-border text-dark-text hover:bg-electric-500 hover:text-white hover:border-electric-500"
-                            >
-                              <Minus size={12} />
-                            </Button>
-                            <span className="text-dark-text font-medium min-w-[2rem] text-center">
-                              {item.quantity}
-                            </span>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="h-8 w-8 border-dark-border text-dark-text hover:bg-electric-500 hover:text-white hover:border-electric-500"
-                            >
-                              <Plus size={12} />
-                            </Button>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeItem(item.id)}
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                          >
-                            Remove
-                          </Button>
-                        </div>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ShoppingBag size={16} className="text-muted-foreground" />
                       </div>
-                    </motion.div>
-                  ))}
-                </div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-medium text-dark-text mb-1">{item.product.name}</h3>
+                    {item.variant && (
+                      <p className="text-sm text-dark-muted mb-1">{item.variant.name}</p>
+                    )}
+                    <p className="text-electric-400 font-semibold mb-2">
+                      ${(item.unit_price_cents / 100).toFixed(2)}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateQuantity(item.id, item.qty - 1)}
+                          className="h-8 w-8 border-dark-border text-dark-text hover:bg-electric-500 hover:text-white hover:border-electric-500"
+                        >
+                          <Minus size={12} />
+                        </Button>
+                        <span className="text-dark-text font-medium min-w-[2rem] text-center">
+                          {item.qty}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => updateQuantity(item.id, item.qty + 1)}
+                          className="h-8 w-8 border-dark-border text-dark-text hover:bg-electric-500 hover:text-white hover:border-electric-500"
+                        >
+                          <Plus size={12} />
+                        </Button>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeItem(item.id)}
+                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
               )}
             </div>
 
@@ -123,7 +136,7 @@ const CartDrawer: React.FC = () => {
                   className="w-full bg-electric-500 hover:bg-electric-600 text-white py-3"
                   onClick={() => {
                     toggleCart();
-                    // Navigate to checkout
+                    window.location.href = '/checkout';
                   }}
                 >
                   Checkout
