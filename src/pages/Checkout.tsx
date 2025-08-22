@@ -346,7 +346,6 @@ const Checkout: React.FC = () => {
               <CheckoutForm clientSecret={clientSecret} />
             </Elements>
           )}
-            )}
           </motion.div>
         </div>
       </div>

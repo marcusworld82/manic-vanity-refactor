@@ -145,8 +145,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         product_id: item.product_id,
         variant_id: item.variant_id,
         qty: item.qty,
-        unit_price_cents: item.unit_cents,
-        subtotal_cents: item.unit_cents * item.qty,
+        unit_price_cents: item.products.price_cents,
+        subtotal_cents: item.products.price_cents * item.qty,
         product: {
           name: item.products.name,
           slug: item.products.slug,
