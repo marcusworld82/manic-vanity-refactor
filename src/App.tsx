@@ -7,6 +7,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { stripePromise } from './lib/stripe';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import Layout from './components/Layout/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import CartDrawer from './components/Cart/CartDrawer';
@@ -17,11 +18,16 @@ import SignUpForm from './components/Auth/SignUpForm';
 import Account from './pages/Account';
 import CommandCenter from './pages/CommandCenter';
 import NotFound from "./pages/NotFound";
+import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import OrderSuccess from "./pages/OrderSuccess";
+// Validate environment on app start
+import './lib/env';
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <div>
+  <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Elements stripe={stripePromise}>
@@ -39,6 +45,13 @@ const App = () => (
                   <Route path="/" element={<Layout />}>
                     <Route index element={<Home />} />
                     <Route path="shop" element={<Shop />} />
+                    <Route path="cart" element={<Cart />} />
+                    <Route path="checkout" element={
+                      <ProtectedRoute>
+                        <Checkout />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="order/success/:paymentIntentId?" element={<OrderSuccess />} />
                     <Route path="account" element={
                       <ProtectedRoute>
                         <Account />
@@ -61,7 +74,7 @@ const App = () => (
         </Elements>
       </TooltipProvider>
     </QueryClientProvider>
-  </div>
+  </ErrorBoundary>
 );
 
 export default App;
