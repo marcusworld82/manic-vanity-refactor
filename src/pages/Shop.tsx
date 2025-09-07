@@ -14,7 +14,7 @@ import { setPageSEO } from '../lib/seo';
 
 const Shop: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const { toast } = useToast();
   
   // UI State
@@ -66,7 +66,7 @@ const Shop: React.FC = () => {
 
   const handleAddToCart = async (productId: string, productName: string) => {
     try {
-      await addToCart(productId, null, 1);
+      await addItem(productId, undefined, 1);
       toast({
         title: "Added to cart",
         description: `${productName} has been added to your cart.`,
