@@ -1,70 +1,39 @@
 /**
- * Environment variable validation and configuration
+ * Environment configuration for Lovable projects
+ * Supabase keys are hardcoded as they are public keys
  */
 
 export interface Environment {
   supabaseUrl: string;
   supabaseAnonKey: string;
   stripePublishableKey?: string;
-  enableAdmin?: boolean;
   isDevelopment: boolean;
   isProduction: boolean;
 }
 
-// Required environment variables
-const REQUIRED_ENV_VARS = [
-  'VITE_SUPABASE_URL',
-  'VITE_SUPABASE_ANON_KEY'
-] as const;
-
-// Optional environment variables with defaults
-const OPTIONAL_ENV_VARS = {
-  VITE_STRIPE_PUBLISHABLE_KEY: '',
-  VITE_ENABLE_ADMIN: 'false'
-} as const;
-
 /**
- * Validates and returns environment configuration
- * Throws error if required variables are missing
+ * Get environment configuration
+ * In Lovable, Supabase keys are hardcoded and Stripe keys come from Supabase secrets
  */
-export function validateEnvironment(): Environment {
-  const missing: string[] = [];
-  const env: Partial<Environment> = {};
-
-  // Check required variables
-  for (const envVar of REQUIRED_ENV_VARS) {
-    const value = import.meta.env[envVar];
-    if (!value) {
-      missing.push(envVar);
-    } else {
-      switch (envVar) {
-        case 'VITE_SUPABASE_URL':
-          env.supabaseUrl = value;
-          break;
-        case 'VITE_SUPABASE_ANON_KEY':
-          env.supabaseAnonKey = value;
-          break;
-      }
-    }
-  }
-
-  // Set optional variables
-  env.stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || OPTIONAL_ENV_VARS.VITE_STRIPE_PUBLISHABLE_KEY;
-  env.enableAdmin = import.meta.env.VITE_ENABLE_ADMIN === 'true';
-  env.isDevelopment = import.meta.env.DEV;
-  env.isProduction = import.meta.env.PROD;
-
-  if (missing.length > 0) {
-    throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
-  }
-
-  return env as Environment;
+export function getEnvironment(): Environment {
+  return {
+    // Supabase configuration (hardcoded public keys)
+    supabaseUrl: "https://zxvbcgdldlipsdfewdgy.supabase.co",
+    supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4dmJjZ2RsZGxpcHNkZmV3ZGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU0ODY4MzUsImV4cCI6MjA3MTA2MjgzNX0.OhgucHU8aNZpFYQ_Zv8aOz9XfUA2QkXTLaUttyFUDzE",
+    
+    // Optional Stripe key (will be undefined until added as secret)
+    stripePublishableKey: undefined,
+    
+    // Environment flags
+    isDevelopment: import.meta.env.DEV,
+    isProduction: import.meta.env.PROD,
+  };
 }
 
 /**
- * Get environment configuration with validation
+ * Get environment configuration
  */
-export const env = validateEnvironment();
+export const env = getEnvironment();
 
 /**
  * Stripe configuration based on environment
